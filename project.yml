@@ -1,0 +1,54 @@
+name: FinderGitBadge
+options:
+  deploymentTarget:
+    macOS: "15.0"
+  bundleIdPrefix: com.example
+
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    MACOSX_DEPLOYMENT_TARGET: 15.0
+
+schemes:
+  FinderGitBadge:
+    build:
+      targets:
+        FinderGitBadge: all
+        FinderGitBadgeFinderSync: all
+    run:
+      config: Debug
+
+targets:
+  FinderGitBadge:
+    type: application
+    platform: macOS
+    sources:
+      - path: src/App
+    resources:
+      - path: src/Scripts
+      - path: src/Assets
+    copyFiles:
+      - destination: resources
+        files:
+          - src/Scripts/apply-github-folder-icons.sh
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.FinderGitBadge
+        INFOPLIST_FILE: src/App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies:
+      - target: FinderGitBadgeFinderSync
+
+  FinderGitBadgeFinderSync:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: src/Extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.FinderGitBadge.FinderSync
+        INFOPLIST_FILE: src/Extension/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_ENTITLEMENTS: src/Extension/Extension.entitlements
+        ENABLE_APP_SANDBOX: YES
+        COMBINE_HIDPI_IMAGES: NO
